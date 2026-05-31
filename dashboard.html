@@ -31,10 +31,8 @@
         <div class="nav-section">Gestão</div>
         <button class="nav-item" type="button" data-tab="doctors" data-permission="manageUsers"><i class="ti ti-user-heart"></i> Médicos</button>
         <button class="nav-item" type="button" data-tab="users" data-permission="manageUsers"><i class="ti ti-users-plus"></i> Usuários</button>
+        <button id="settingsButton" class="nav-item" type="button"><i class="ti ti-settings"></i> Configurações</button>
       </nav>
-      <div class="sidebar-footer-actions">
-        <button id="settingsButton" class="sidebar-action-btn" type="button"><i class="ti ti-settings"></i> Configurações</button>
-      </div>
       <button id="logoutButton" class="logout-btn" type="button"><i class="ti ti-logout"></i> Sair</button>
     </aside>
 
@@ -207,36 +205,31 @@
 
   <div id="settingsModal" class="modal-overlay" hidden>
     <section class="modal-card settings-card" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
-      <header class="modal-header">
-        <h2 id="settingsModalTitle"><i class="ti ti-settings"></i> Configurações do Sistema</h2>
-        <button id="closeSettingsModalButton" class="icon-button" type="button" aria-label="Fechar"><i class="ti ti-x"></i></button>
-      </header>
+      <header class="modal-header"><h2 id="settingsModalTitle">Configurações</h2><button id="closeSettingsModalButton" class="icon-button" type="button" aria-label="Fechar"><i class="ti ti-x"></i></button></header>
       <div class="modal-body settings-body">
-        <section class="settings-section">
+        <div class="settings-section">
           <h3>Aparência</h3>
           <div class="settings-item">
-            <div><strong>Modo escuro</strong><p>Aplica visual escuro ao sistema.</p></div>
+            <div><strong>Modo escuro</strong><p>Altera o tema visual do dashboard.</p></div>
             <label class="toggle-switch"><input id="settingDarkMode" type="checkbox" /><span></span></label>
           </div>
           <div class="settings-item">
-            <div><strong>Fonte compacta</strong><p>Reduz espaçamentos para caber mais informações na tela.</p></div>
+            <div><strong>Modo compacto</strong><p>Reduz espaçamentos para visualizar mais conteúdo na tela.</p></div>
             <label class="toggle-switch"><input id="settingCompactMode" type="checkbox" /><span></span></label>
           </div>
-        </section>
-        <section class="settings-section">
-          <h3>IA para leitura de exames</h3>
-          <p class="muted-text">A chave da IA fica protegida na Vercel. Aqui você configura apenas o endpoint chamado pelo sistema.</p>
-          <label>Endpoint seguro da IA
-            <input id="settingsAiEndpoint" type="text" placeholder="/api/extrair" />
-          </label>
-          <button id="saveSettingsButton" class="btn btn-primary" type="button"><i class="ti ti-device-floppy"></i> Salvar configurações</button>
-        </section>
-        <section class="settings-section">
-          <h3>Sistema</h3>
-          <div class="settings-info-row"><span>Versão</span><strong>HRPT v3</strong></div>
-          <div class="settings-info-row"><span>Banco de dados</span><strong>Firebase Realtime Database</strong></div>
-          <div class="settings-info-row"><span>Autenticação</span><strong>Firebase Authentication</strong></div>
-        </section>
+        </div>
+        <div class="settings-section">
+          <h3>Integração de IA</h3>
+          <label>Endpoint seguro da IA<input id="settingsAiEndpoint" type="url" placeholder="/api/extrair" /></label>
+          <p class="muted-text">Use <strong>/api/extrair</strong> quando o sistema estiver publicado na Vercel.</p>
+        </div>
+        <div class="settings-section">
+          <h3>Sobre o sistema</h3>
+          <div class="settings-info-row"><strong>Versão</strong><span>HRPT v3</span></div>
+          <div class="settings-info-row"><strong>Banco</strong><span>Firebase Realtime Database</span></div>
+          <div class="settings-info-row"><strong>Hospedagem</strong><span>Vercel / Web</span></div>
+        </div>
+        <footer class="modal-footer"><button class="btn" type="button" id="cancelSettingsButton">Cancelar</button><button class="btn btn-primary" type="button" id="saveSettingsButton"><i class="ti ti-device-floppy"></i> Salvar configurações</button></footer>
       </div>
     </section>
   </div>

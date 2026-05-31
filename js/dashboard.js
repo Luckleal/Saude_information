@@ -111,6 +111,7 @@ function setupSettings() {
   applyStoredSettings();
   document.getElementById('settingsButton')?.addEventListener('click', openSettingsModal);
   document.getElementById('closeSettingsModalButton')?.addEventListener('click', closeSettingsModal);
+  document.getElementById('cancelSettingsButton')?.addEventListener('click', closeSettingsModal);
   document.getElementById('settingsModal')?.addEventListener('click', event => {
     if (event.target.id === 'settingsModal') closeSettingsModal();
   });
@@ -375,6 +376,7 @@ function renderPatientPanel(key) {
     return;
   }
 
+  const doctorName = state.MEDICOS.find(doctor => doctor.id === patient.medico_id)?.nome || '—';
   const identification = document.createElement('section');
   identification.className = 'summary-section';
   identification.innerHTML = '<h3><i class="ti ti-id-badge"></i> Identificação</h3>';
@@ -387,6 +389,7 @@ function renderPatientPanel(key) {
   appendSummaryInfo(identification, 'Comorbidades', patient.comorbidades || '—');
   appendSummaryInfo(identification, 'Alergias', patient.alergias || 'Nega', patient.alergias ? '' : 'positive');
   appendSummaryInfo(identification, 'MUC', formatSimpleList(patient.muc, 'med') || 'Nega');
+  appendSummaryInfo(identification, 'Médico resp.', doctorName, doctorName === '—' ? '' : 'accent');
 
   const vitals = document.createElement('section');
   vitals.className = 'summary-section vitals-summary-section';
@@ -405,20 +408,34 @@ function renderPatientPanel(key) {
   body.append(identification, vitals);
 
   const actions = document.createElement('div');
-  actions.className = 'panel-actions dark-actions';
+  actions.className = 'panel-actions dark-actions patient-panel-footer';
+
+  const release = document.createElement('button');
+  release.className = 'btn btn-danger btn-footer-liberate';
+  release.type = 'button';
+  release.innerHTML = '<i class="ti ti-door-exit"></i> Liberar';
+  release.hidden = !can(currentProfile.perfil, 'releaseBed');
+  release.addEventListener('click', async () => {
+    if (!confirm('Deseja liberar este leito?')) return;
+    await set(ref(db, `${STATE_PATH}/DATA/${currentSector}/${key}`), { status: 'clean', medico_id: patient.medico_id || '', liberadoEm: new Date().toISOString(), liberadoPor: currentUser.uid });
+    toast('Leito liberado e marcado para limpeza.');
+  });
+
+  const exportButton = document.createElement('button');
+  exportButton.className = 'btn btn-green btn-footer-export';
+  exportButton.type = 'button';
+  exportButton.innerHTML = '<i class="ti ti-file-export"></i> Exportar';
+  exportButton.hidden = !can(currentProfile.perfil, 'exportRecord');
+  exportButton.addEventListener('click', () => exportPatientRecord(currentSector, key));
+
   const edit = document.createElement('button');
-  edit.className = 'btn btn-primary';
+  edit.className = 'btn btn-primary btn-footer-edit';
   edit.type = 'button';
   edit.innerHTML = '<i class="ti ti-edit"></i> Editar';
   edit.hidden = !can(currentProfile.perfil, 'editBeds') && !can(currentProfile.perfil, 'updateVitals');
   edit.addEventListener('click', () => openPatientModal(currentSector, key));
-  const exportButton = document.createElement('button');
-  exportButton.className = 'btn dark-secondary-btn';
-  exportButton.type = 'button';
-  exportButton.innerHTML = '<i class="ti ti-file-text"></i> Exportar';
-  exportButton.hidden = !can(currentProfile.perfil, 'exportRecord');
-  exportButton.addEventListener('click', () => exportPatientRecord(currentSector, key));
-  actions.append(edit, exportButton);
+
+  actions.append(release, exportButton, edit);
   panel.append(header, body, actions);
 }
 

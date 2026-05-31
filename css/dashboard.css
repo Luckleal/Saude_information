@@ -1199,17 +1199,17 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
 }
 
 .patient-panel {
-  background: #15192b;
-  border: 1px solid rgba(255,255,255,.06);
-  color: #f8fafc;
-  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 18px 45px rgba(7, 10, 25, .24);
+  box-shadow: 0 18px 45px rgba(7, 10, 25, .12);
 }
 
 .patient-summary-header {
-  padding: 1.25rem 1.35rem 1.05rem;
-  min-height: 82px;
+  padding: 1.35rem 1.35rem 1.15rem;
+  min-height: 84px;
   color: #fff;
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-3));
 }
@@ -1251,14 +1251,14 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
 .status-badge.occ { background: rgba(255,255,255,.14); color: #fecaca; }
 
 .patient-summary-body {
-  padding: 1rem 1.05rem 0;
+  padding: 1rem 1.15rem 0;
   display: grid;
-  gap: 1.15rem;
+  gap: 1.25rem;
 }
 
 .summary-section h3 {
-  color: #eef2ff;
-  font-size: .82rem;
+  color: var(--color-primary);
+  font-size: 1rem;
   text-transform: uppercase;
   letter-spacing: .9px;
   font-weight: 900;
@@ -1266,28 +1266,28 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
   align-items: center;
   gap: .45rem;
   padding-bottom: .65rem;
-  border-bottom: 1px solid rgba(255,255,255,.08);
+  border-bottom: 1px solid #d7ddf7;
   margin-bottom: .55rem;
 }
 
 .summary-info-row {
   display: grid;
-  grid-template-columns: minmax(118px, .85fr) minmax(0, 1fr);
+  grid-template-columns: minmax(120px, .9fr) minmax(0, 1fr);
   gap: .7rem;
   align-items: center;
-  min-height: 28px;
-  padding: .19rem 0;
-  border-bottom: 1px solid rgba(255,255,255,.055);
+  min-height: 32px;
+  padding: .24rem 0;
+  border-bottom: 1px solid #e4e9fb;
 }
 
 .summary-info-row span {
-  color: #9ba8d8;
-  font-size: .95rem;
+  color: #7080c6;
+  font-size: 1rem;
 }
 
 .summary-info-row strong {
-  color: #f8fafc;
-  font-size: .95rem;
+  color: var(--color-primary);
+  font-size: 1rem;
   text-align: right;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1295,24 +1295,28 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
 }
 
 .summary-info-row strong.positive {
-  color: #4ade80;
+  color: #2e7d32;
+}
+
+.summary-info-row strong.accent {
+  color: var(--color-secondary);
 }
 
 .summary-vitals-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: .55rem;
+  gap: .6rem;
 }
 
 .summary-vital-card {
-  min-height: 74px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #27349f, #3548b8);
+  min-height: 84px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #2c38a8, #3949b8);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: .15rem;
+  gap: .18rem;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
 }
 
@@ -1322,20 +1326,20 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
 
 .summary-vital-card span {
   color: #b9c4f5;
-  font-size: .75rem;
+  font-size: .82rem;
   font-weight: 900;
   letter-spacing: .5px;
 }
 
 .summary-vital-card strong {
   color: #fff;
-  font-size: 1.25rem;
+  font-size: 1.35rem;
   line-height: 1;
 }
 
 .summary-vital-card small {
   color: #c7d2fe;
-  font-size: .75rem;
+  font-size: .8rem;
 }
 
 .patient-summary-empty {
@@ -1361,15 +1365,37 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
 }
 
 .dark-actions {
-  padding: 1rem;
-  background: #15192b;
-  border-top: 1px solid rgba(255,255,255,.07);
+  padding: .95rem 1rem 1rem;
+  background: #f1f4ff;
+  border-top: 1px solid #dbe3fb;
 }
 
 .dark-secondary-btn {
   background: rgba(255,255,255,.08);
   color: #eef2ff;
   border-color: rgba(255,255,255,.12);
+}
+
+.patient-panel-footer {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .55rem;
+}
+
+.btn-footer-liberate {
+  background: var(--color-danger-soft);
+  color: var(--color-danger-text);
+  border-color: #fecaca;
+}
+
+.btn-footer-export {
+  background: var(--color-success-soft);
+  color: var(--color-success-text);
+  border-color: #bbf7d0;
+}
+
+.btn-footer-edit {
+  min-width: 0;
 }
 
 .settings-card {
@@ -1466,5 +1492,11 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
   .patient-panel {
     position: static;
     max-height: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .patient-panel-footer {
+    grid-template-columns: 1fr;
   }
 }
