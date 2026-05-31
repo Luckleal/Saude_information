@@ -1535,3 +1535,68 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
     grid-template-columns: 1fr;
   }
 }
+
+/* Ajuste final — scroll interno visível no painel lateral da ficha */
+.patient-panel {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 92px);
+  overflow: hidden;
+}
+
+.patient-summary-header {
+  flex-shrink: 0;
+}
+
+.patient-summary-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding-right: 1.1rem;
+  scrollbar-width: thin;
+  scrollbar-color: #9fa8da #eef2ff;
+}
+
+.patient-summary-body::-webkit-scrollbar {
+  width: 9px;
+}
+
+.patient-summary-body::-webkit-scrollbar-track {
+  background: #eef2ff;
+  border-radius: 999px;
+}
+
+.patient-summary-body::-webkit-scrollbar-thumb {
+  background: #9fa8da;
+  border-radius: 999px;
+  border: 2px solid #eef2ff;
+}
+
+.patient-summary-body::-webkit-scrollbar-thumb:hover {
+  background: #7986cb;
+}
+
+.patient-panel-footer {
+  flex-shrink: 0;
+}
+
+/* Scroll da navegação do menu lateral */
+.sidebar {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar-nav {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+@media (max-width: 1180px) {
+  .patient-panel {
+    max-height: 75vh;
+    overflow: hidden;
+  }
+}
