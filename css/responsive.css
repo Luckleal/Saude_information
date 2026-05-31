@@ -1,0 +1,69 @@
+@media(max-width:1050px) {
+  .main-layout {
+    grid-template-columns: 1fr
+  }
+
+  .patient-panel {
+    position: static;
+    max-height: none
+  }
+
+  .stats-row {
+    grid-template-columns: repeat(3, 1fr)
+  }
+}
+
+@media(max-width:760px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+    min-height: auto
+  }
+
+  .topbar,
+  .content {
+    margin-left: 0
+  }
+
+  .topbar {
+    height: auto;
+    align-items: flex-start;
+    gap: .8rem;
+    padding: 1rem;
+    flex-direction: column
+  }
+
+  .sidebar-nav {
+    grid-template-columns: 1fr
+  }
+
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr)
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr
+  }
+
+  .modal-footer {
+    flex-direction: column
+  }
+
+  .modal-footer .btn {
+    width: 100%
+  }
+}
+
+@media(max-width:420px) {
+  .stats-row {
+    grid-template-columns: 1fr
+  }
+
+  .bed {
+    width: 82px
+  }
+
+  .auth-card {
+    padding: 1.8rem 1.3rem
+  }
+}

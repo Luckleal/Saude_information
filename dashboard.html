@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HRPT — Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+<body>
+  <div id="app" class="app-shell is-loading">
+    <aside class="sidebar" aria-label="Menu principal">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-box"><i class="ti ti-heart-rate-monitor"></i></div>
+        <div><strong>HRPT</strong><span>Sistema Integrado v3</span></div>
+      </div>
+      <div class="sidebar-user">
+        <div id="userAvatar" class="user-avatar">U</div>
+        <div><strong id="userName">Carregando...</strong><span id="userRole">Perfil</span></div>
+      </div>
+      <nav class="sidebar-nav">
+        <div class="nav-section">Setores</div>
+        <button class="nav-item active" type="button" data-tab="sector" data-sector="cm"><i class="ti ti-building-hospital"></i> Clínica Médica</button>
+        <button class="nav-item nav-red" type="button" data-tab="sector" data-sector="sv"><i class="ti ti-urgent"></i> Sala Vermelha</button>
+        <button class="nav-item nav-orange" type="button" data-tab="sector" data-sector="ps"><i class="ti ti-stethoscope"></i> Obs. Pronto Socorro</button>
+        <div class="nav-section">Ferramentas</div>
+        <button class="nav-item" type="button" data-tab="calculator" data-permission="useCalculator"><i class="ti ti-calculator"></i> Calculadora Médica</button>
+        <div class="nav-section">Gestão</div>
+        <button class="nav-item" type="button" data-tab="doctors" data-permission="manageUsers"><i class="ti ti-user-heart"></i> Médicos</button>
+        <button class="nav-item" type="button" data-tab="users" data-permission="manageUsers"><i class="ti ti-users-plus"></i> Usuários</button>
+      </nav>
+      <button id="logoutButton" class="logout-btn" type="button"><i class="ti ti-logout"></i> Sair</button>
+    </aside>
+
+    <header class="topbar">
+      <div><h1 id="pageTitle">Clínica Médica</h1><p id="pageSubtitle">25 leitos · 6 quartos</p></div>
+      <div class="topbar-actions"><span id="syncStatus" class="sync-pill"><span class="sync-dot"></span> Conectando...</span><span id="lastUpdate" class="last-update"></span></div>
+    </header>
+
+    <main class="content">
+      <section id="sectorTab" class="tab-panel active" aria-label="Setor hospitalar">
+        <div id="sectorHeader" class="sector-header cm">
+          <i id="sectorIcon" class="ti ti-building-hospital"></i>
+          <div><h2 id="sectorTitle">Clínica Médica</h2><p id="sectorDescription">25 leitos · 6 quartos</p></div>
+        </div>
+        <div class="section-header compact-actions">
+          <div><h2>Mapa de Leitos</h2><p id="sectorHelp">Selecione um leito para visualizar ou editar a ficha.</p></div>
+          <button id="exportSectorButton" class="btn btn-green" type="button"><i class="ti ti-table-export"></i> Exportar Excel/CSV</button>
+        </div>
+        <div id="statsRow" class="stats-row"></div>
+        <div class="main-layout">
+          <section id="wardGrid" class="ward-grid" aria-label="Quartos e leitos"></section>
+          <aside id="patientPanel" class="patient-panel" aria-label="Ficha do paciente"><div class="panel-empty"><i class="ti ti-bed"></i><p>Selecione um leito para visualizar a ficha.</p></div></aside>
+        </div>
+      </section>
+
+      <section id="calculatorTab" class="tab-panel" aria-label="Calculadora médica">
+        <div class="section-header"><div><h2>Calculadora médica</h2><p>Ferramentas de apoio: IMC, dose por peso, CKD-EPI, Wells TEP, SOFA e HAS-BLED.</p></div></div>
+        <div class="calc-grid">
+          <article class="calc-card"><h2><i class="ti ti-droplet"></i> IMC</h2><form id="imcForm" class="mini-form"><label>Peso (kg)<input id="imcPeso" type="number" step="0.1" min="1" /></label><label>Altura (m)<input id="imcAltura" type="number" step="0.01" min="0.5" /></label><button class="btn btn-primary" type="submit">Calcular</button></form><div id="imcResult" class="calc-result"></div></article>
+          <article class="calc-card"><h2><i class="ti ti-pill"></i> Dose por peso</h2><form id="doseForm" class="mini-form"><label>Peso (kg)<input id="dosePeso" type="number" step="0.1" min="1" /></label><label>Dose (mg/kg)<input id="doseMgKg" type="number" step="0.1" min="0" /></label><button class="btn btn-primary" type="submit">Calcular</button></form><div id="doseResult" class="calc-result"></div></article>
+          <article class="calc-card"><h2><i class="ti ti-kidney"></i> CKD-EPI</h2><form id="ckdForm" class="mini-form"><label>Creatinina (mg/dL)<input id="ckdCr" type="number" step="0.01" min="0" /></label><label>Idade<input id="ckdAge" type="number" min="1" /></label><label>Sexo<select id="ckdSex"><option value="M">Masculino</option><option value="F">Feminino</option></select></label><button class="btn btn-primary" type="submit">Calcular</button></form><div id="ckdResult" class="calc-result"></div></article>
+          <article class="calc-card"><h2><i class="ti ti-lungs"></i> Wells TEP</h2><form id="wellsForm" class="mini-form checks-form"><label><input type="checkbox" value="3" /> Sinais/sintomas de TVP</label><label><input type="checkbox" value="3" /> Diagnóstico alternativo menos provável</label><label><input type="checkbox" value="1.5" /> FC &gt; 100 bpm</label><label><input type="checkbox" value="1.5" /> Imobilização/cirurgia &lt; 4 semanas</label><label><input type="checkbox" value="1.5" /> TVP/TEP prévia</label><label><input type="checkbox" value="1" /> Hemoptise</label><label><input type="checkbox" value="1" /> Neoplasia ativa</label><button class="btn btn-primary" type="submit">Calcular</button></form><div id="wellsResult" class="calc-result"></div></article>
+          <article class="calc-card"><h2><i class="ti ti-virus"></i> SOFA</h2><form id="sofaForm" class="mini-form"><label>Respiração<select class="sofa-part"><option value="0">PaO₂/FiO₂ ≥400</option><option value="1">300–399</option><option value="2">200–299</option><option value="3">100–199 + VM</option><option value="4">&lt;100 + VM</option></select></label><label>Plaquetas<select class="sofa-part"><option value="0">≥150</option><option value="1">100–149</option><option value="2">50–99</option><option value="3">20–49</option><option value="4">&lt;20</option></select></label><label>Bilirrubina<select class="sofa-part"><option value="0">&lt;1,2</option><option value="1">1,2–1,9</option><option value="2">2,0–5,9</option><option value="3">6,0–11,9</option><option value="4">≥12</option></select></label><label>Cardiovascular<select class="sofa-part"><option value="0">PAM ≥70</option><option value="1">PAM &lt;70</option><option value="2">Dopa ≤5</option><option value="3">Dopa 5–15</option><option value="4">Dopa &gt;15</option></select></label><label>Neurológico<select class="sofa-part"><option value="0">Glasgow 15</option><option value="1">13–14</option><option value="2">10–12</option><option value="3">6–9</option><option value="4">&lt;6</option></select></label><label>Renal<select class="sofa-part"><option value="0">Creat. &lt;1,2</option><option value="1">1,2–1,9</option><option value="2">2,0–3,4</option><option value="3">3,5–4,9</option><option value="4">≥5,0</option></select></label><button class="btn btn-primary" type="submit">Calcular</button></form><div id="sofaResult" class="calc-result"></div></article>
+          <article class="calc-card"><h2><i class="ti ti-heart"></i> HAS-BLED</h2><form id="hasbledForm" class="mini-form checks-form"><label><input type="checkbox" /> HAS não controlada</label><label><input type="checkbox" /> Alteração renal/hepática</label><label><input type="checkbox" /> AVC prévio</label><label><input type="checkbox" /> Sangramento prévio</label><label><input type="checkbox" /> INR lábil</label><label><input type="checkbox" /> Idade &gt;65</label><label><input type="checkbox" /> Drogas/álcool</label><button class="btn btn-primary" type="submit">Calcular</button></form><div id="hasbledResult" class="calc-result"></div></article>
+        </div>
+      </section>
+
+      <section id="doctorsTab" class="tab-panel" aria-label="Gerenciamento de médicos">
+        <div class="page-card">
+          <div class="section-header"><div><h2>Médicos responsáveis</h2><p>Cadastro usado para vincular médico responsável aos leitos.</p></div></div>
+          <form id="doctorForm" class="register-form" novalidate><div class="form-grid"><label>Nome do médico<input id="doctorName" type="text" placeholder="Dr(a). Nome" required /></label><label>CRM<input id="doctorCrm" type="text" placeholder="CRM-TO 12345" /></label></div><button class="btn btn-primary" type="submit"><i class="ti ti-plus"></i> Adicionar médico</button></form>
+          <div id="doctorsList" class="users-list"></div>
+        </div>
+      </section>
+
+      <section id="usersTab" class="tab-panel" aria-label="Gerenciamento de usuários">
+        <div class="page-card"><div class="section-header"><div><h2>Cadastro de usuários</h2><p>Apenas administradores podem criar novos usuários.</p></div></div>
+          <form id="registerForm" class="register-form" novalidate><div class="form-grid"><label>Nome completo<input id="registerName" type="text" required /></label><label>E-mail<input id="registerEmail" type="email" required /></label><label>Perfil<select id="registerRole" required><option value="medico">Médico</option><option value="enfermagem">Enfermagem</option><option value="administrador">Administrador</option></select></label><label>Senha<input id="registerPassword" type="password" minlength="6" required /></label><label>Confirmar senha<input id="registerConfirmPassword" type="password" minlength="6" required /></label></div><button class="btn btn-primary" type="submit"><i class="ti ti-user-plus"></i> Criar usuário</button></form>
+          <div id="registerMessage" class="form-message" role="status"></div><div id="usersList" class="users-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="patientModal" class="modal-overlay" hidden>
+    <section class="modal-card modal-card-wide" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-header"><h2 id="modalTitle">Editar leito</h2><button id="closeModalButton" class="icon-button" type="button" aria-label="Fechar"><i class="ti ti-x"></i></button></header>
+      <form id="patientForm" class="modal-body">
+        <input id="bedKey" type="hidden" /><input id="sectorKey" type="hidden" />
+        <div class="form-row two-cols compact-row">
+          <label data-nursing-field>Status
+            <select id="patientStatus"><option value="free">Livre</option><option value="occ">Ocupado</option><option value="alert">Alta prevista</option><option value="clean">Em limpeza</option></select>
+          </label>
+          <label data-nursing-field>Isolamento
+            <select id="patientIsolation"><option value="false">Não</option><option value="true">Sim</option></select>
+          </label>
+        </div>
+
+        <div class="form-section-title"><i class="ti ti-id"></i> Identificação</div>
+        <div class="form-grid form-grid-identification">
+          <label data-medical-field class="span-2">Nome completo<input id="patientName" type="text" /></label>
+          <label data-medical-field>Idade<input id="patientAge" type="number" min="0" /></label>
+          <label data-medical-field>Sexo<select id="patientSex"><option value="M">Masculino</option><option value="F">Feminino</option></select></label>
+          <label data-medical-field>Peso<input id="patientWeight" type="text" placeholder="68kg" /></label>
+          <label data-medical-field>Origem<input id="patientOrigin" type="text" /></label>
+          <label data-medical-field>Data de admissão<input id="patientAdmission" type="text" placeholder="DD/MM/AAAA" /></label>
+          <label data-medical-field class="span-2">Diagnóstico principal<input id="patientDiagnosis" type="text" /></label>
+          <label data-medical-field>CID<input id="patientCid" type="text" /></label>
+          <label data-medical-field>Alergias<input id="patientAllergies" type="text" placeholder="Nega" /></label>
+          <label data-medical-field class="span-2">Comorbidades<input id="patientComorbidities" type="text" /></label>
+          <label data-medical-field class="span-2">Médico responsável<select id="patientDoctor"><option value="">— Nenhum —</option></select></label>
+        </div>
+
+        <div class="form-section-title"><i class="ti ti-notes"></i> História da admissão</div>
+        <label data-medical-field><textarea id="admissionHistory" rows="4"></textarea></label>
+
+        <div class="form-section-title"><i class="ti ti-clipboard-text"></i> Avaliação diária</div>
+        <label data-medical-field><textarea id="dailyAssessment" rows="5"></textarea></label>
+
+        <div class="form-section-title"><i class="ti ti-stethoscope"></i> Exame físico</div>
+        <div class="physical-exam-grid">
+          <label data-medical-field>Ectoscopia<textarea id="examEcto" rows="3"></textarea></label>
+          <label data-medical-field>Neurológico<textarea id="examNeuro" rows="3"></textarea></label>
+          <label data-medical-field>Cardiovascular<textarea id="examCardio" rows="3"></textarea></label>
+          <label data-medical-field>Pulmonar<textarea id="examPulmonar" rows="3"></textarea></label>
+          <label data-medical-field>Abdome<textarea id="examAbdome" rows="3"></textarea></label>
+          <label data-medical-field>Renal<textarea id="examRenal" rows="3"></textarea></label>
+          <label data-medical-field>Membros inferiores<textarea id="examMmii" rows="3"></textarea></label>
+        </div>
+
+        <div class="form-section-title"><i class="ti ti-pill"></i> MUC</div>
+        <div id="mucListRows" class="dynamic-list simple-list" data-medical-field></div>
+        <button class="add-line-button" type="button" data-add-row="mucListRows"><i class="ti ti-plus"></i> Adicionar</button>
+
+        <div class="form-section-title"><i class="ti ti-brain"></i> Hipóteses diagnósticas</div>
+        <div id="hypothesesRows" class="dynamic-list simple-list" data-medical-field></div>
+        <button class="add-line-button" type="button" data-add-row="hypothesesRows"><i class="ti ti-plus"></i> Adicionar</button>
+
+        <div class="form-section-title"><i class="ti ti-list-check"></i> Lista de problemas</div>
+        <div id="problemsRows" class="dynamic-list simple-list" data-medical-field></div>
+        <button class="add-line-button" type="button" data-add-row="problemsRows"><i class="ti ti-plus"></i> Adicionar</button>
+
+        <div class="form-section-title"><i class="ti ti-alert-circle"></i> Pendências</div>
+        <div class="dynamic-header pending-header"><span>Pendência</span><span>Prazo</span><span></span></div>
+        <div id="pendingRows" class="dynamic-list pending-list" data-medical-field></div>
+        <button class="add-line-button" type="button" data-add-row="pendingRows"><i class="ti ti-plus"></i> Adicionar</button>
+
+        <div class="form-section-title"><i class="ti ti-medical-cross"></i> Tratamento em curso</div>
+        <div class="dynamic-header treatment-header"><span>Medicação</span><span>Dose</span><span>Freq.</span><span>Via</span><span>D. início</span><span></span></div>
+        <div id="treatmentsRows" class="dynamic-list treatment-list" data-medical-field></div>
+        <button class="add-line-button" type="button" data-add-row="treatmentsRows"><i class="ti ti-plus"></i> Adicionar</button>
+
+        <div class="form-section-title"><i class="ti ti-users"></i> Especialidades</div>
+        <div class="dynamic-header specialty-header"><span>Data</span><span>Especialidade</span><span>Médico(a)</span><span></span></div>
+        <div id="specialtiesRows" class="dynamic-list specialty-list" data-medical-field></div>
+        <button class="add-line-button" type="button" data-add-row="specialtiesRows"><i class="ti ti-plus"></i> Adicionar</button>
+
+        <div class="form-section-title"><i class="ti ti-flask"></i> Exames laboratoriais</div>
+        <button id="openAiExamButton" class="ai-drop-button" type="button" data-medical-field>
+          <i class="ti ti-file-type-pdf"></i>
+          <strong>Importar PDF ou imagem com IA</strong>
+          <span>PDF, PNG, JPG, print de tela</span>
+        </button>
+        <div class="dynamic-header lab-header"><span>Data</span><span>Resultados</span><span></span></div>
+        <div id="labRows" class="dynamic-list lab-list" data-medical-field></div>
+        <button class="add-line-button" type="button" data-add-row="labRows"><i class="ti ti-plus"></i> Adicionar</button>
+
+        <div class="form-section-title"><i class="ti ti-photo-scan"></i> Exames de imagem</div>
+        <div class="dynamic-header image-exam-header"><span>Data</span><span>Laudo/descrição</span><span></span></div>
+        <div id="imageExamRows" class="dynamic-list image-exam-list" data-medical-field></div>
+        <button class="add-line-button" type="button" data-add-row="imageExamRows"><i class="ti ti-plus"></i> Adicionar</button>
+        <label data-medical-field>Anexar imagens do exame<input id="imageFiles" type="file" accept="image/*" multiple /></label>
+        <div id="imagePreview" class="image-preview-list"></div>
+
+        <div class="form-section-title"><i class="ti ti-activity"></i> Sinais vitais</div>
+        <div class="form-grid vitals-grid">
+          <label data-nursing-field>PA (mmHg)<input id="vitalPa" type="text" /></label>
+          <label data-nursing-field>FC (bpm)<input id="vitalFc" type="text" /></label>
+          <label data-nursing-field>FR (irpm)<input id="vitalFr" type="text" /></label>
+          <label data-nursing-field>Temp. (°C)<input id="vitalTemp" type="text" /></label>
+          <label data-nursing-field>SpO₂<input id="vitalSpo2" type="text" /></label>
+        </div>
+
+        <div class="form-section-title"><i class="ti ti-route"></i> Conduta</div>
+        <div id="conductRows" class="dynamic-list simple-list" data-medical-field></div>
+        <button class="add-line-button" type="button" data-add-row="conductRows"><i class="ti ti-plus"></i> Adicionar</button>
+
+        <footer class="modal-footer"><button id="releaseBedButton" class="btn btn-danger" type="button"><i class="ti ti-door-exit"></i> Liberar leito</button><button class="btn" type="button" id="cancelModalButton">Cancelar</button><button class="btn btn-primary" type="submit"><i class="ti ti-device-floppy"></i> Salvar</button></footer>
+      </form>
+    </section>
+  </div>
+
+  <div id="examModal" class="modal-overlay" hidden>
+    <section class="modal-card modal-card-wide" role="dialog" aria-modal="true" aria-labelledby="examModalTitle">
+      <header class="modal-header"><h2 id="examModalTitle">Importar exames com IA</h2><button id="closeExamModalButton" class="icon-button" type="button" aria-label="Fechar"><i class="ti ti-x"></i></button></header>
+      <div class="modal-body"><p class="muted-text">Este formulário envia PDF ou imagem para um endpoint seguro de IA. Na Vercel use <strong>/api/extrair</strong>. A chave da IA fica protegida nas variáveis de ambiente.</p><label>Endpoint seguro da IA<input id="aiEndpoint" type="url" placeholder="/api/extrair ou https://seu-projeto.vercel.app/api/extrair" /></label><label>Arquivo do exame<input id="examFileInput" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,image/*,application/pdf" /></label><button id="processExamButton" class="btn btn-primary" type="button"><i class="ti ti-upload"></i> Processar exame</button><div id="examStatus" class="form-message"></div><div id="examResultTable" class="ai-result-area"></div><textarea id="examPreview" rows="8" placeholder="Texto formatado para inserir na ficha aparecerá aqui"></textarea><footer class="modal-footer"><button id="insertExamButton" class="btn btn-primary" type="button"><i class="ti ti-plus"></i> Inserir na ficha</button></footer></div>
+    </section>
+  </div>
+
+  <div id="lightbox" class="img-lightbox" hidden><button id="closeLightbox" class="img-lightbox-close" type="button"><i class="ti ti-x"></i></button><img id="lightboxImg" src="" alt="Exame ampliado" /></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script type="module" src="js/dashboard.js"></script>
+</body>
+</html>

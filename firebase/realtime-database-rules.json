@@ -1,0 +1,36 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+
+    "configuracoes": {
+      ".read": "auth != null",
+      ".write": "auth != null && (root.child('usuarios').child(auth.uid).child('perfil').val() === 'administrador' || root.child('usuarios').child(auth.uid).child('perfil').val() === 'admin')"
+    },
+
+    "usuarios": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || root.child('usuarios').child(auth.uid).child('perfil').val() === 'administrador' || root.child('usuarios').child(auth.uid).child('perfil').val() === 'admin')",
+        ".write": "auth != null && (root.child('usuarios').child(auth.uid).child('perfil').val() === 'administrador' || root.child('usuarios').child(auth.uid).child('perfil').val() === 'admin')",
+        "perfil": { ".validate": "newData.val() === 'administrador' || newData.val() === 'admin' || newData.val() === 'medico' || newData.val() === 'enfermagem'" },
+        "email": { ".validate": "newData.isString()" },
+        "nome": { ".validate": "newData.isString()" },
+        "ativo": { ".validate": "newData.isBoolean()" },
+        "criadoEm": { ".validate": "newData.isString()" },
+        "$other": { ".validate": true }
+      }
+    },
+
+    "hrpt": {
+      "v20": {
+        ".read": "auth != null && root.child('usuarios').child(auth.uid).child('ativo').val() === true",
+        ".write": "auth != null && root.child('usuarios').child(auth.uid).child('ativo').val() === true && (root.child('usuarios').child(auth.uid).child('perfil').val() === 'administrador' || root.child('usuarios').child(auth.uid).child('perfil').val() === 'admin' || root.child('usuarios').child(auth.uid).child('perfil').val() === 'medico' || root.child('usuarios').child(auth.uid).child('perfil').val() === 'enfermagem')",
+        "$other": { ".validate": true }
+      },
+      "v2": {
+        ".read": "auth != null && root.child('usuarios').child(auth.uid).child('ativo').val() === true",
+        ".write": "auth != null && root.child('usuarios').child(auth.uid).child('ativo').val() === true"
+      }
+    }
+  }
+}

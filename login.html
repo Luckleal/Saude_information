@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HRPT — Login</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css" />
+  <link rel="stylesheet" href="css/reset.css" />
+  <link rel="stylesheet" href="css/variables.css" />
+  <link rel="stylesheet" href="css/login.css" />
+  <link rel="stylesheet" href="css/responsive.css" />
+</head>
+
+<body class="auth-page">
+  <main class="auth-shell">
+    <section class="auth-card" aria-labelledby="loginTitle">
+      <div class="login-logo">
+        <div class="login-logo-icon" aria-hidden="true">
+          <svg viewBox="0 0 40 40">
+            <path d="M20 6 C12 6 6 12 6 19 C6 28 14 33 20 36 C26 33 34 28 34 19 C34 12 28 6 20 6Z" />
+            <path d="M14 19 H18 L20 14 L22 24 L24 19 H26" />
+          </svg>
+        </div>
+        <p class="login-hosp">Hospital Regional de Paraíso</p>
+        <p class="login-sub">Dr. Alfredo de Oliveira Barros</p>
+      </div>
+
+      <h1 id="loginTitle">Bem-vindo ao HRPT</h1>
+      <p class="auth-description">Sistema de Gerenciamento de Enfermaria — Clínica Médica</p>
+
+      <form id="loginForm" class="auth-form" novalidate>
+        <div class="field-group">
+          <label for="email">E-mail</label>
+          <input id="email" name="email" type="email" autocomplete="email" placeholder="usuario@hospital.com"
+            required />
+        </div>
+
+        <div class="field-group">
+          <label for="password">Senha</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••"
+            minlength="6" required />
+        </div>
+
+        <button id="loginButton" class="btn btn-primary btn-block" type="submit">
+          <i class="ti ti-login"></i>
+          Entrar no sistema
+        </button>
+      </form>
+
+      <div id="loginMessage" class="form-message" role="status" aria-live="polite"></div>
+
+      <div class="auth-note">
+        <strong>Cadastro de usuários:</strong> por segurança, apenas administradores autenticados podem criar novos
+        acessos dentro do dashboard.
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="./js/login.js"></script>
+</body>
+
+</html>
