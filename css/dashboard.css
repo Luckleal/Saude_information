@@ -114,13 +114,13 @@
 
 .topbar {
   margin-left: 250px;
-  height: 64px;
+  height: 58px;
   background: var(--color-card);
   border-bottom: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1.5rem;
+  padding: 0 1.35rem;
   position: sticky;
   top: 0;
   z-index: 10;
@@ -1194,7 +1194,7 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
 }
 
 .main-layout {
-  grid-template-columns: minmax(0, 1fr) minmax(380px, 430px);
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 360px);
   align-items: start;
 }
 
@@ -1202,14 +1202,16 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
   background: #ffffff;
   border: 1px solid var(--color-border);
   color: var(--color-text);
-  border-radius: 24px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 18px 45px rgba(7, 10, 25, .12);
+  box-shadow: 0 14px 34px rgba(7, 10, 25, .10);
+  max-width: 360px;
+  justify-self: end;
 }
 
 .patient-summary-header {
-  padding: 1.35rem 1.35rem 1.15rem;
-  min-height: 84px;
+  padding: 1rem 1.1rem .95rem;
+  min-height: 72px;
   color: #fff;
   background: linear-gradient(135deg, var(--color-primary), var(--color-primary-3));
 }
@@ -1224,22 +1226,22 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
 }
 
 .patient-summary-header h2 {
-  font-size: 1.2rem;
+  font-size: 1.02rem;
   line-height: 1.2;
   letter-spacing: .2px;
   display: flex;
   align-items: center;
-  gap: .45rem;
+  gap: .4rem;
 }
 
 .status-badge {
-  margin-top: .7rem;
+  margin-top: .55rem;
   display: inline-flex;
   width: fit-content;
   align-items: center;
   border-radius: 999px;
-  padding: .22rem .7rem;
-  font-size: .8rem;
+  padding: .18rem .6rem;
+  font-size: .72rem;
   font-weight: 800;
   background: rgba(255,255,255,.14);
   color: rgba(255,255,255,.88);
@@ -1251,43 +1253,43 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
 .status-badge.occ { background: rgba(255,255,255,.14); color: #fecaca; }
 
 .patient-summary-body {
-  padding: 1rem 1.15rem 0;
+  padding: .85rem 1rem 0;
   display: grid;
-  gap: 1.25rem;
+  gap: .95rem;
 }
 
 .summary-section h3 {
   color: var(--color-primary);
-  font-size: 1rem;
+  font-size: .82rem;
   text-transform: uppercase;
-  letter-spacing: .9px;
+  letter-spacing: .8px;
   font-weight: 900;
   display: flex;
   align-items: center;
-  gap: .45rem;
-  padding-bottom: .65rem;
+  gap: .4rem;
+  padding-bottom: .5rem;
   border-bottom: 1px solid #d7ddf7;
-  margin-bottom: .55rem;
+  margin-bottom: .45rem;
 }
 
 .summary-info-row {
   display: grid;
-  grid-template-columns: minmax(120px, .9fr) minmax(0, 1fr);
-  gap: .7rem;
+  grid-template-columns: minmax(105px, .9fr) minmax(0, 1fr);
+  gap: .55rem;
   align-items: center;
-  min-height: 32px;
-  padding: .24rem 0;
+  min-height: 27px;
+  padding: .16rem 0;
   border-bottom: 1px solid #e4e9fb;
 }
 
 .summary-info-row span {
   color: #7080c6;
-  font-size: 1rem;
+  font-size: .85rem;
 }
 
 .summary-info-row strong {
   color: var(--color-primary);
-  font-size: 1rem;
+  font-size: .86rem;
   text-align: right;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1305,18 +1307,18 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
 .summary-vitals-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: .6rem;
+  gap: .45rem;
 }
 
 .summary-vital-card {
-  min-height: 84px;
-  border-radius: 14px;
+  min-height: 62px;
+  border-radius: 11px;
   background: linear-gradient(135deg, #2c38a8, #3949b8);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: .18rem;
+  gap: .12rem;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
 }
 
@@ -1326,20 +1328,20 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
 
 .summary-vital-card span {
   color: #b9c4f5;
-  font-size: .82rem;
+  font-size: .64rem;
   font-weight: 900;
-  letter-spacing: .5px;
+  letter-spacing: .45px;
 }
 
 .summary-vital-card strong {
   color: #fff;
-  font-size: 1.35rem;
+  font-size: 1rem;
   line-height: 1;
 }
 
 .summary-vital-card small {
   color: #c7d2fe;
-  font-size: .8rem;
+  font-size: .64rem;
 }
 
 .patient-summary-empty {
@@ -1365,7 +1367,7 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
 }
 
 .dark-actions {
-  padding: .95rem 1rem 1rem;
+  padding: .75rem .8rem .85rem;
   background: #f1f4ff;
   border-top: 1px solid #dbe3fb;
 }
@@ -1379,7 +1381,14 @@ body.compact-mode .form-section-title { margin-top: .7rem; }
 .patient-panel-footer {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: .55rem;
+  gap: .45rem;
+}
+
+.patient-panel-footer .btn {
+  min-height: 34px;
+  padding: .48rem .55rem;
+  font-size: .78rem;
+  border-radius: 9px;
 }
 
 .btn-footer-liberate {
