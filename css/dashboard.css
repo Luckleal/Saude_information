@@ -1059,3 +1059,98 @@
   .dynamic-header span:last-child { display: none; }
   .remove-row-button { width: 100%; }
 }
+
+
+/* Correção v3.1 — evita vazamento dos campos dinâmicos para fora do modal */
+.modal-card,
+.modal-card-wide {
+  width: min(980px, calc(100vw - 2rem)) !important;
+  max-width: calc(100vw - 2rem) !important;
+  overflow: hidden;
+}
+
+.modal-body,
+#patientForm {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.modal-body input,
+.modal-body select,
+.modal-body textarea,
+#patientForm input,
+#patientForm select,
+#patientForm textarea {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.form-row,
+.form-grid,
+.form-row.two-cols,
+.form-grid-identification,
+.dynamic-list,
+.dynamic-row,
+.dynamic-header,
+.physical-exam-grid {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.dynamic-row > *,
+.dynamic-header > *,
+.form-row > *,
+.form-grid > * {
+  min-width: 0;
+}
+
+.dynamic-row.simple-row {
+  grid-template-columns: minmax(0, 1fr) 42px;
+}
+
+.dynamic-row.pending-row {
+  grid-template-columns: minmax(0, 1fr) minmax(110px, 150px) 42px;
+}
+
+.dynamic-row.treatment-row {
+  grid-template-columns: minmax(0, 2fr) minmax(80px, 1fr) minmax(80px, 1fr) minmax(80px, 1fr) minmax(88px, 110px) 42px;
+}
+
+.dynamic-row.specialty-row {
+  grid-template-columns: minmax(88px, 110px) minmax(0, 1fr) minmax(0, 1fr) 42px;
+}
+
+.dynamic-row.dated-text-row {
+  grid-template-columns: minmax(88px, 110px) minmax(0, 1fr) 42px;
+}
+
+.remove-row-button {
+  width: 38px;
+  min-width: 38px;
+  max-width: 38px;
+  height: 38px;
+  justify-self: end;
+}
+
+/* Em telas menores, as linhas viram blocos para não estourar a largura */
+@media (max-width: 1100px) {
+  .dynamic-row.pending-row,
+  .dynamic-row.treatment-row,
+  .dynamic-row.specialty-row,
+  .dynamic-row.dated-text-row,
+  .dynamic-row.simple-row {
+    grid-template-columns: 1fr;
+  }
+
+  .dynamic-header {
+    display: none;
+  }
+
+  .remove-row-button {
+    width: 100%;
+    max-width: 100%;
+    justify-self: stretch;
+  }
+}
