@@ -65,6 +65,7 @@ function bootDashboard() {
   setupModalEvents();
   setupCalculator();
   setupLogout();
+  setupSettings();
   setupDoctors();
   setupAiModal();
   listenState();
@@ -103,6 +104,56 @@ function setupNavigation() {
   });
 
   document.getElementById('exportSectorButton')?.addEventListener('click', exportCurrentSectorCsv);
+}
+
+
+function setupSettings() {
+  applyStoredSettings();
+  document.getElementById('settingsButton')?.addEventListener('click', openSettingsModal);
+  document.getElementById('closeSettingsModalButton')?.addEventListener('click', closeSettingsModal);
+  document.getElementById('settingsModal')?.addEventListener('click', event => {
+    if (event.target.id === 'settingsModal') closeSettingsModal();
+  });
+  document.getElementById('settingDarkMode')?.addEventListener('change', event => {
+    localStorage.setItem('hrpt_dark_mode', event.target.checked ? '1' : '0');
+    applyStoredSettings();
+  });
+  document.getElementById('settingCompactMode')?.addEventListener('change', event => {
+    localStorage.setItem('hrpt_compact_mode', event.target.checked ? '1' : '0');
+    applyStoredSettings();
+  });
+  document.getElementById('saveSettingsButton')?.addEventListener('click', () => {
+    const endpoint = getValue('settingsAiEndpoint') || '/api/extrair';
+    localStorage.setItem('hrpt_ai_endpoint', endpoint);
+    setValue('aiEndpoint', endpoint);
+    toast('Configurações salvas.');
+    closeSettingsModal();
+  });
+}
+
+function applyStoredSettings() {
+  const dark = localStorage.getItem('hrpt_dark_mode') === '1';
+  const compact = localStorage.getItem('hrpt_compact_mode') === '1';
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  document.body.classList.toggle('compact-mode', compact);
+  const darkInput = document.getElementById('settingDarkMode');
+  const compactInput = document.getElementById('settingCompactMode');
+  if (darkInput) darkInput.checked = dark;
+  if (compactInput) compactInput.checked = compact;
+}
+
+function openSettingsModal() {
+  setValue('settingsAiEndpoint', localStorage.getItem('hrpt_ai_endpoint') || '/api/extrair');
+  applyStoredSettings();
+  const modal = document.getElementById('settingsModal');
+  modal.hidden = false;
+  modal.removeAttribute('hidden');
+}
+
+function closeSettingsModal() {
+  const modal = document.getElementById('settingsModal');
+  modal.hidden = true;
+  modal.setAttribute('hidden', '');
 }
 
 function setupLogout() {
@@ -291,15 +342,28 @@ function renderEmptyPanel() {
 function renderPatientPanel(key) {
   selectedBed = key;
   renderWard();
-  const patient = getSectorPatients()[key] || { status: 'free' };
+  const patient = getSectorPatients()[key] || { status: 'free', vitals: {} };
   const panel = document.getElementById('patientPanel');
   panel.replaceChildren();
+
+  const header = document.createElement('header');
+  header.className = `patient-summary-header ${currentSector}`;
+  const title = document.createElement('h2');
+  title.innerHTML = `<i class="ti ti-bed"></i> Leito ${key.slice(0, -1)} ${key.slice(-1).toUpperCase()}`;
+  const subtitle = document.createElement('span');
+  subtitle.className = `status-badge ${patient.status || 'free'}`;
+  subtitle.textContent = getStatusLabel(patient.status);
+  header.append(title, subtitle);
+
+  const body = document.createElement('div');
+  body.className = 'patient-summary-body';
+
   if (!patient.nome) {
     const empty = document.createElement('div');
-    empty.className = 'panel-empty';
-    empty.innerHTML = '<i class="ti ti-circle-check"></i><p>Leito disponível.</p>';
+    empty.className = 'patient-summary-empty';
+    empty.innerHTML = '<i class="ti ti-circle-check"></i><strong>Leito disponível</strong><span>Sem paciente internado neste leito.</span>';
     const actions = document.createElement('div');
-    actions.className = 'panel-actions';
+    actions.className = 'panel-actions dark-actions';
     const admit = document.createElement('button');
     admit.className = 'btn btn-primary';
     admit.type = 'button';
@@ -307,44 +371,41 @@ function renderPatientPanel(key) {
     admit.hidden = !can(currentProfile.perfil, 'editBeds');
     admit.addEventListener('click', () => openPatientModal(currentSector, key));
     actions.appendChild(admit);
-    panel.append(empty, actions);
+    panel.append(header, empty, actions);
     return;
   }
-  const header = document.createElement('header');
-  header.className = `panel-header ${currentSector}`;
-  const title = document.createElement('h2');
-  title.textContent = `Leito ${key.slice(0, -1)} ${key.slice(-1).toUpperCase()}`;
-  const subtitle = document.createElement('p');
-  subtitle.textContent = patient.status === 'alert' ? 'Alta prevista' : 'Internado(a)';
-  header.append(title, subtitle);
-  const body = document.createElement('div');
-  body.className = 'panel-body';
-  appendInfo(body, 'Nome', patient.nome);
-  appendInfo(body, 'Idade / Sexo', `${patient.idade || '—'} anos / ${patient.sexo === 'F' ? 'Feminino' : 'Masculino'}`);
-  appendInfo(body, 'Médico', getDoctorName(patient.medico_id) || '—');
-  appendInfo(body, 'Origem', patient.origem || '—');
-  appendInfo(body, 'Admissão', patient.admissao || '—');
-  appendInfo(body, 'Peso', patient.peso || '—');
-  appendInfo(body, 'Diagnóstico', patient.diagnostico || '—');
-  appendInfo(body, 'CID', patient.cid || '—');
-  appendInfo(body, 'Comorbidades', patient.comorbidades || '—');
-  appendInfo(body, 'Alergias', patient.alergias || 'Nega');
-  appendInfo(body, 'MUC', formatSimpleList(patient.muc, 'med') || 'Nega');
-  appendSection(body, 'Hipóteses diagnósticas', formatSimpleList(patient.hipoteses));
-  appendSection(body, 'Pendências', formatPending(patient.pendencias));
-  appendSection(body, 'Avaliação diária', patient.avaliacao_diaria);
-  appendSection(body, 'Exame físico', formatPhysicalExam(patient.exame_fisico));
-  appendSection(body, 'Problemas', formatSimpleList(patient.problemas));
-  appendSection(body, 'Tratamentos', formatTreatments(patient.tratamentos));
-  appendSection(body, 'Especialidades', formatSpecialties(patient.especialidades));
-  appendSection(body, 'Exames laboratoriais', formatDatedText(patient.laboratoriais));
-  appendSection(body, 'Exames de imagem', formatDatedText(patient.imagens));
-  appendImageThumbs(body, patient.imagens);
-  appendSection(body, 'Conduta', formatSimpleList(patient.conduta));
-  appendSection(body, 'Sinais vitais', `PA: ${patient.vitals?.pa || '—'} | FC: ${patient.vitals?.fc || '—'} | FR: ${patient.vitals?.fr || '—'} | Temp.: ${patient.vitals?.temp || '—'} | SpO₂: ${patient.vitals?.spo2 || '—'}`);
-  if ((patient.calc_resultados || []).length) appendSection(body, 'Cálculos anexados', patient.calc_resultados.map(c => `${c.titulo} (${c.data})\n${c.resultado}`).join('\n\n'));
+
+  const identification = document.createElement('section');
+  identification.className = 'summary-section';
+  identification.innerHTML = '<h3><i class="ti ti-id-badge"></i> Identificação</h3>';
+  appendSummaryInfo(identification, 'Nome', patient.nome || '—');
+  appendSummaryInfo(identification, 'Idade / Sexo', `${patient.idade || '—'} anos / ${patient.sexo === 'F' ? 'Feminino' : 'Masculino'}`);
+  appendSummaryInfo(identification, 'Origem', patient.origem || '—');
+  appendSummaryInfo(identification, 'Admissão', patient.admissao || '—');
+  appendSummaryInfo(identification, 'Diagnóstico', patient.diagnostico || '—');
+  appendSummaryInfo(identification, 'CID', patient.cid || '—');
+  appendSummaryInfo(identification, 'Comorbidades', patient.comorbidades || '—');
+  appendSummaryInfo(identification, 'Alergias', patient.alergias || 'Nega', patient.alergias ? '' : 'positive');
+  appendSummaryInfo(identification, 'MUC', formatSimpleList(patient.muc, 'med') || 'Nega');
+
+  const vitals = document.createElement('section');
+  vitals.className = 'summary-section vitals-summary-section';
+  vitals.innerHTML = '<h3><i class="ti ti-wave-sine"></i> Sinais vitais</h3>';
+  const vitalsGrid = document.createElement('div');
+  vitalsGrid.className = 'summary-vitals-grid';
+  vitalsGrid.append(
+    createVitalCard('PA', patient.vitals?.pa || '—', 'mmHg'),
+    createVitalCard('FC', patient.vitals?.fc || '—', 'bpm'),
+    createVitalCard('FR', patient.vitals?.fr || '—', 'irpm'),
+    createVitalCard('TEMP.', patient.vitals?.temp || '—', '°C'),
+    createVitalCard('SPO₂', patient.vitals?.spo2 || '—', '')
+  );
+  vitals.appendChild(vitalsGrid);
+
+  body.append(identification, vitals);
+
   const actions = document.createElement('div');
-  actions.className = 'panel-actions';
+  actions.className = 'panel-actions dark-actions';
   const edit = document.createElement('button');
   edit.className = 'btn btn-primary';
   edit.type = 'button';
@@ -352,13 +413,37 @@ function renderPatientPanel(key) {
   edit.hidden = !can(currentProfile.perfil, 'editBeds') && !can(currentProfile.perfil, 'updateVitals');
   edit.addEventListener('click', () => openPatientModal(currentSector, key));
   const exportButton = document.createElement('button');
-  exportButton.className = 'btn';
+  exportButton.className = 'btn dark-secondary-btn';
   exportButton.type = 'button';
   exportButton.innerHTML = '<i class="ti ti-file-text"></i> Exportar';
   exportButton.hidden = !can(currentProfile.perfil, 'exportRecord');
   exportButton.addEventListener('click', () => exportPatientRecord(currentSector, key));
   actions.append(edit, exportButton);
   panel.append(header, body, actions);
+}
+
+function appendSummaryInfo(parent, label, value, className = '') {
+  const row = document.createElement('div');
+  row.className = 'summary-info-row';
+  const labelEl = document.createElement('span');
+  labelEl.textContent = label;
+  const valueEl = document.createElement('strong');
+  valueEl.textContent = value || '—';
+  if (className) valueEl.classList.add(className);
+  row.append(labelEl, valueEl);
+  parent.appendChild(row);
+}
+
+function createVitalCard(label, value, unit) {
+  const card = document.createElement('div');
+  card.className = label === 'SPO₂' ? 'summary-vital-card wide' : 'summary-vital-card';
+  card.innerHTML = `<span>${label}</span><strong>${value}</strong><small>${unit}</small>`;
+  return card;
+}
+
+function getStatusLabel(status) {
+  const labels = { free: 'Livre', occ: 'Internado(a)', alert: 'Alta prevista', clean: 'Em limpeza' };
+  return labels[status] || labels.free;
 }
 
 function appendInfo(parent, label, value) {

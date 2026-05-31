@@ -32,6 +32,9 @@
         <button class="nav-item" type="button" data-tab="doctors" data-permission="manageUsers"><i class="ti ti-user-heart"></i> Médicos</button>
         <button class="nav-item" type="button" data-tab="users" data-permission="manageUsers"><i class="ti ti-users-plus"></i> Usuários</button>
       </nav>
+      <div class="sidebar-footer-actions">
+        <button id="settingsButton" class="sidebar-action-btn" type="button"><i class="ti ti-settings"></i> Configurações</button>
+      </div>
       <button id="logoutButton" class="logout-btn" type="button"><i class="ti ti-logout"></i> Sair</button>
     </aside>
 
@@ -198,6 +201,43 @@
     <section class="modal-card modal-card-wide" role="dialog" aria-modal="true" aria-labelledby="examModalTitle">
       <header class="modal-header"><h2 id="examModalTitle">Importar exames com IA</h2><button id="closeExamModalButton" class="icon-button" type="button" aria-label="Fechar"><i class="ti ti-x"></i></button></header>
       <div class="modal-body"><p class="muted-text">Este formulário envia PDF ou imagem para um endpoint seguro de IA. Na Vercel use <strong>/api/extrair</strong>. A chave da IA fica protegida nas variáveis de ambiente.</p><label>Endpoint seguro da IA<input id="aiEndpoint" type="url" placeholder="/api/extrair ou https://seu-projeto.vercel.app/api/extrair" /></label><label>Arquivo do exame<input id="examFileInput" type="file" accept=".pdf,.png,.jpg,.jpeg,.webp,image/*,application/pdf" /></label><button id="processExamButton" class="btn btn-primary" type="button"><i class="ti ti-upload"></i> Processar exame</button><div id="examStatus" class="form-message"></div><div id="examResultTable" class="ai-result-area"></div><textarea id="examPreview" rows="8" placeholder="Texto formatado para inserir na ficha aparecerá aqui"></textarea><footer class="modal-footer"><button id="insertExamButton" class="btn btn-primary" type="button"><i class="ti ti-plus"></i> Inserir na ficha</button></footer></div>
+    </section>
+  </div>
+
+
+  <div id="settingsModal" class="modal-overlay" hidden>
+    <section class="modal-card settings-card" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+      <header class="modal-header">
+        <h2 id="settingsModalTitle"><i class="ti ti-settings"></i> Configurações do Sistema</h2>
+        <button id="closeSettingsModalButton" class="icon-button" type="button" aria-label="Fechar"><i class="ti ti-x"></i></button>
+      </header>
+      <div class="modal-body settings-body">
+        <section class="settings-section">
+          <h3>Aparência</h3>
+          <div class="settings-item">
+            <div><strong>Modo escuro</strong><p>Aplica visual escuro ao sistema.</p></div>
+            <label class="toggle-switch"><input id="settingDarkMode" type="checkbox" /><span></span></label>
+          </div>
+          <div class="settings-item">
+            <div><strong>Fonte compacta</strong><p>Reduz espaçamentos para caber mais informações na tela.</p></div>
+            <label class="toggle-switch"><input id="settingCompactMode" type="checkbox" /><span></span></label>
+          </div>
+        </section>
+        <section class="settings-section">
+          <h3>IA para leitura de exames</h3>
+          <p class="muted-text">A chave da IA fica protegida na Vercel. Aqui você configura apenas o endpoint chamado pelo sistema.</p>
+          <label>Endpoint seguro da IA
+            <input id="settingsAiEndpoint" type="text" placeholder="/api/extrair" />
+          </label>
+          <button id="saveSettingsButton" class="btn btn-primary" type="button"><i class="ti ti-device-floppy"></i> Salvar configurações</button>
+        </section>
+        <section class="settings-section">
+          <h3>Sistema</h3>
+          <div class="settings-info-row"><span>Versão</span><strong>HRPT v3</strong></div>
+          <div class="settings-info-row"><span>Banco de dados</span><strong>Firebase Realtime Database</strong></div>
+          <div class="settings-info-row"><span>Autenticação</span><strong>Firebase Authentication</strong></div>
+        </section>
+      </div>
     </section>
   </div>
 
